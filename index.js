@@ -8,17 +8,19 @@ let gameState = false;
 let powerUpState = false;
 powerButton.style.color = "red";
 let snake = {
-  tail: [],
   body: [],
-  head: [],
+  movingDirection: [],
 };
+let cellArr = [];
 
 //functions
 function makeTable() {
   for (let i = 0; i < 15; i++) {
     const tr = document.createElement("tr");
+    cellArr.push([]);
     for (let j = 0; j < 17; j++) {
       const td = document.createElement("td");
+      cellArr[i].push(td);
       tr.appendChild(td);
     }
     table.appendChild(tr);
@@ -27,6 +29,7 @@ function makeTable() {
 
 //function calling
 makeTable();
+cellArr[1][1].style.backgroundColor = "green";
 
 //Event Listeners
 powerButton.addEventListener(`click`, (evt) => {
@@ -37,6 +40,10 @@ powerButton.addEventListener(`click`, (evt) => {
     powerButton.style.color = "red";
     powerUpState = false;
   }
+});
+
+addEventListener("keydown", (evt) => {
+  console.log(evt.target);
 });
 
 //PreGame SetInterval: keeps blinking "Press arrow keys to start the game", and once gameStarts, clearInterval
@@ -52,6 +59,9 @@ let firstIntervalID = setInterval(function () {
 }, 800);
 
 //Start Game Interval
+let secondIntervalID = setInterval(function () {
+  //LISTEN TO KEY DOWN PRESS
+});
 
 //Actual Game Interval
 
