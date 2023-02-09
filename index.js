@@ -4,12 +4,11 @@ const preGameTitle = document.getElementById("preGameTitle");
 const powerButton = document.getElementById("power-up-button");
 
 //global variables
-let gameState = false;
 let powerUpState = false;
 powerButton.style.color = "red";
 let snake = {
-  body: [],
-  movingDirection: [],
+  body: [[1, 1]],
+  movingDirection: [0, 0],
 };
 let cellArr = [];
 
@@ -25,11 +24,17 @@ function makeTable() {
     }
     table.appendChild(tr);
   }
+  cellArr[1][1].style.backgroundColor = "green";
+}
+
+function renderSnake() {
+  for (let i = 0; i < snake.body.length; i++) {
+    cellArr[snake.body[i][0]][snake.body[i][1]].style.backgroundColor = "green";
+  }
 }
 
 //function calling
 makeTable();
-cellArr[1][1].style.backgroundColor = "green";
 
 //Event Listeners
 powerButton.addEventListener(`click`, (evt) => {
@@ -43,26 +48,37 @@ powerButton.addEventListener(`click`, (evt) => {
 });
 
 addEventListener("keydown", (evt) => {
-  console.log(evt.target);
+  clearInterval(firstIntervalID);
+  preGameTitle.style.display = `none`;
+  if (evt.key === "ArrowRight") {
+    snake.movingDirection = [0, 1];
+  }
+  if (evt.key === "ArrowLeft") {
+    snake.movingDirection = [0, -1];
+  }
+  if (evt.key === "ArrowDown") {
+    snake.movingDirection = [1, 0];
+  }
+  if (evt.key === "ArrowUp") {
+    snake.movingDirection = [-1, 0];
+  }
 });
 
 //PreGame SetInterval: keeps blinking "Press arrow keys to start the game", and once gameStarts, clearInterval
 let firstIntervalID = setInterval(function () {
-  console.log(`WAAA`);
-  if (!gameState) {
-    if (preGameTitle.style.display === "none") {
-      preGameTitle.style.display = `initial`;
-    } else {
-      preGameTitle.style.display = `none`;
-    }
+  if (preGameTitle.style.display === "none") {
+    preGameTitle.style.display = `initial`;
+  } else {
+    preGameTitle.style.display = `none`;
   }
-}, 800);
-
-//Start Game Interval
-let secondIntervalID = setInterval(function () {
-  //LISTEN TO KEY DOWN PRESS
-});
+}, 1000);
 
 //Actual Game Interval
+let secondIntervalID = setInterval(function () {
+  //LISTEN TO KEY DOWN PRESS
+  snake.body[0][0] += snake.movingDirection[0];
+  snake.body[0][1] += snake.movingDirection[1];
+  renderSnake();
+}, 300);
 
 // clearInterval(firstIntervalID);
