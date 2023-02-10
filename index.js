@@ -1,13 +1,21 @@
 //DOM variables
 const table = document.getElementsByTagName("table")[0];
 const preGameTitle = document.getElementById("preGameTitle");
+const afterGameTitle = document.getElementById("afterGameTitle");
 const powerButton = document.getElementById("power-up-button");
+const score = document.getElementById("score");
 
 //global variables
 let powerUpState = false;
+let gameState = false;
+let appleEaten = true;
 powerButton.style.color = "red";
 let snake = {
-  body: [[1, 1]],
+  body: [
+    [1, 1],
+    [2, 1],
+    [3, 1],
+  ],
   movingDirection: [0, 0],
 };
 let cellArr = [];
@@ -24,12 +32,48 @@ function makeTable() {
     }
     table.appendChild(tr);
   }
-  cellArr[1][1].style.backgroundColor = "green";
+  cellArr[1][1].className = "snake";
+  cellArr[2][1].className = "snake";
+  cellArr[3][1].className = "snake";
 }
 
 function renderSnake() {
-  for (let i = 0; i < snake.body.length; i++) {
-    cellArr[snake.body[i][0]][snake.body[i][1]].style.backgroundColor = "green";
+  try {
+    //Saves the location of the tail of the snake
+    let previousPosition = [snake.body[0][0], snake.body[0][1]];
+
+    //Cuts off the tail of the snake and puts it at the head
+    snake.body.push(snake.body.shift());
+
+    //Set the coordinates of the new head = to that of the previous head
+    snake.body[snake.body.length - 1][0] = snake.body[snake.body.length - 2][0];
+    snake.body[snake.body.length - 1][1] = snake.body[snake.body.length - 2][1];
+
+    //Set the coordinates of the new head at the appropriate coordinate depending on the moving direction
+    snake.body[snake.body.length - 1][0] += snake.movingDirection[0];
+    snake.body[snake.body.length - 1][1] += snake.movingDirection[1];
+
+    //Color the cell of the new head green while coloring the old tail not green
+    cellArr[snake.body[snake.body.length - 1][0]][
+      snake.body[snake.body.length - 1][1]
+    ].className = "snake";
+    cellArr[previousPosition[0]][previousPosition[1]].className = "td";
+  } catch (error) {
+    afterGameTitle.style.display = "block";
+    clearInterval(secondIntervalID);
+  }
+}
+
+function spawnApple() {
+  //Grabs one random coordinates on the game map
+  let x = Math.floor(Math.random() * cellArr[0].length);
+  let y = Math.floor(Math.random() * cellArr.length);
+  console.log(x, y);
+  if (cellArr[x][y].className != "snake") {
+    cellArr[x][y].className = "apple";
+  } else {
+    console.log("spawn apple recurse");
+    spawnApple();
   }
 }
 
@@ -38,28 +82,58 @@ makeTable();
 
 //Event Listeners
 powerButton.addEventListener(`click`, (evt) => {
-  if (!powerUpState) {
-    powerButton.style.color = "green";
-    powerUpState = true;
-  } else {
-    powerButton.style.color = "red";
-    powerUpState = false;
+  if (!gameState) {
+    if (!powerUpState) {
+      powerButton.style.color = "green";
+      powerUpState = true;
+    } else {
+      powerButton.style.color = "red";
+      powerUpState = false;
+    }
   }
 });
 
+afterGameTitle.addEventListener(`click`, (evt) => {
+  window.location.reload();
+});
+
 addEventListener("keydown", (evt) => {
-  clearInterval(firstIntervalID);
-  preGameTitle.style.display = `none`;
   if (evt.key === "ArrowRight") {
+    if (!gameState) {
+      clearInterval(firstIntervalID);
+      gameState = true;
+    }
+    preGameTitle.style.display = `none`;
     snake.movingDirection = [0, 1];
   }
   if (evt.key === "ArrowLeft") {
+    if (!gameState) {
+      clearInterval(firstIntervalID);
+      gameState = true;
+    }
+    clearInterval(firstIntervalID);
+    gameState = true;
+    preGameTitle.style.display = `none`;
     snake.movingDirection = [0, -1];
   }
   if (evt.key === "ArrowDown") {
+    if (!gameState) {
+      clearInterval(firstIntervalID);
+      gameState = true;
+    }
+    clearInterval(firstIntervalID);
+    gameState = true;
+    preGameTitle.style.display = `none`;
     snake.movingDirection = [1, 0];
   }
   if (evt.key === "ArrowUp") {
+    if (!gameState) {
+      clearInterval(firstIntervalID);
+      gameState = true;
+    }
+    clearInterval(firstIntervalID);
+    gameState = true;
+    preGameTitle.style.display = `none`;
     snake.movingDirection = [-1, 0];
   }
 });
@@ -76,9 +150,14 @@ let firstIntervalID = setInterval(function () {
 //Actual Game Interval
 let secondIntervalID = setInterval(function () {
   //LISTEN TO KEY DOWN PRESS
-  snake.body[0][0] += snake.movingDirection[0];
-  snake.body[0][1] += snake.movingDirection[1];
-  renderSnake();
-}, 300);
+  if (gameState) {
+    renderSnake();
+    if (appleEaten) {
+      console.log(`REACHED`);
+      spawnApple();
+      appleEaten = false;
+    }
+  }
+}, 50);
 
 // clearInterval(firstIntervalID);
