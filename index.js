@@ -2,12 +2,12 @@
 const table = document.getElementsByTagName("table")[0];
 const preGameTitle = document.getElementById("preGameTitle");
 const afterGameTitle = document.getElementById("afterGameTitle");
-const powerButton = document.getElementById("power-up-button");
+const funButton = document.getElementById("fun-button");
 const score = document.getElementById("score");
 
 //global variables
 //boolean
-let powerUpState = false;
+let funModeState = false;
 let gameState = false;
 let appleEaten = false;
 //integer
@@ -45,26 +45,24 @@ function makeTable() {
 
   cellArr[10][1].className = "apple";
 
-  powerButton.style.color = "red";
+  funButton.style.color = "red";
 }
 
 function renderSnake() {
   //try catch for if they hit the border!
+  let previousPosition = [snake.body[0][0], snake.body[0][1]];
+  //Saves the location of the tail of the snake
+
+  snake.movingDirection[0] = newDirection[0];
+  snake.movingDirection[1] = newDirection[1];
+
+  //Cuts off the tail of the snake and puts it at the head
+  snake.body.push(snake.body.shift());
+
+  //Set the coordinates of the new head = to that of the previous head
+  snake.body[snake.body.length - 1][0] = snake.body[snake.body.length - 2][0];
+  snake.body[snake.body.length - 1][1] = snake.body[snake.body.length - 2][1];
   try {
-    //Saves the location of the tail of the snake
-
-    let previousPosition = [snake.body[0][0], snake.body[0][1]];
-
-    snake.movingDirection[0] = newDirection[0];
-    snake.movingDirection[1] = newDirection[1];
-
-    //Cuts off the tail of the snake and puts it at the head
-    snake.body.push(snake.body.shift());
-
-    //Set the coordinates of the new head = to that of the previous head
-    snake.body[snake.body.length - 1][0] = snake.body[snake.body.length - 2][0];
-    snake.body[snake.body.length - 1][1] = snake.body[snake.body.length - 2][1];
-
     //Checks if the newspot is an apple
     if (
       cellArr[snake.body[snake.body.length - 1][0] + snake.movingDirection[0]][
@@ -103,8 +101,28 @@ function renderSnake() {
       cellArr[previousPosition[0]][previousPosition[1]].className = "td";
     }
   } catch (error) {
-    afterGameTitle.style.display = "block";
-    clearInterval(secondIntervalID);
+    //THIS IS ALL STRETCH GOALS!!!!! IF YOU CANT FIGURE IT OUT BEFORE HANGING OUT WITH SAM, SUBMIT BASE GAME!!!
+    //if its collided with the wall, and funModeState is On
+    if (funModeState) {
+      //if its going right, teleport to left border
+      if (snake.movingDirection[1] === 1) {
+        snake.body[snake.body.length - 1][1] = 0;
+      } else if (snake.movingDirection[1] === -1) {
+        console.log(snake.body[0].length - 1);
+        snake.body[snake.body.length - 1][1] = cellArr[0].length - 1;
+      } else if (snake.movingDirection[0] === 1) {
+        snake.body[snake.body.length - 1][0] = 0;
+      } else if (snake.movingDirection[0] === -1) {
+        snake.body[snake.body.length - 1][0] = cellArr.length - 1;
+      }
+      cellArr[snake.body[snake.body.length - 1][0]][
+        snake.body[snake.body.length - 1][1]
+      ].className = "snake";
+      cellArr[previousPosition[0]][previousPosition[1]].className = "td";
+    } else {
+      afterGameTitle.style.display = "block";
+      clearInterval(secondIntervalID);
+    }
   }
 }
 
@@ -125,14 +143,14 @@ makeTable();
 
 //Event Listeners
 //fun mode on or off
-powerButton.addEventListener(`click`, (evt) => {
+funButton.addEventListener(`click`, (evt) => {
   if (!gameState) {
-    if (!powerUpState) {
-      powerButton.style.color = "green";
-      powerUpState = true;
+    if (!funModeState) {
+      funButton.style.color = "green";
+      funModeState = true;
     } else {
-      powerButton.style.color = "red";
-      powerUpState = false;
+      funButton.style.color = "red";
+      funModeState = false;
     }
   }
 });
