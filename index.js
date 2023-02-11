@@ -8,7 +8,8 @@ const score = document.getElementById("score");
 //global variables
 let powerUpState = false;
 let gameState = false;
-let appleEaten = true;
+let appleEaten = false;
+let newDirection = [0, 0];
 powerButton.style.color = "red";
 let snake = {
   body: [
@@ -35,12 +36,21 @@ function makeTable() {
   cellArr[1][1].className = "snake";
   cellArr[2][1].className = "snake";
   cellArr[3][1].className = "snake";
+
+  cellArr[10][1].className = "apple";
+
+  console.log(cellArr.length);
+  console.log(cellArr[0].length);
 }
 
 function renderSnake() {
   try {
     //Saves the location of the tail of the snake
+
     let previousPosition = [snake.body[0][0], snake.body[0][1]];
+
+    snake.movingDirection[0] = newDirection[0];
+    snake.movingDirection[1] = newDirection[1];
 
     //Cuts off the tail of the snake and puts it at the head
     snake.body.push(snake.body.shift());
@@ -49,15 +59,36 @@ function renderSnake() {
     snake.body[snake.body.length - 1][0] = snake.body[snake.body.length - 2][0];
     snake.body[snake.body.length - 1][1] = snake.body[snake.body.length - 2][1];
 
-    //Set the coordinates of the new head at the appropriate coordinate depending on the moving direction
-    snake.body[snake.body.length - 1][0] += snake.movingDirection[0];
-    snake.body[snake.body.length - 1][1] += snake.movingDirection[1];
+    //Checks if the newspot is an apple
+    if (
+      cellArr[snake.body[snake.body.length - 1][0] + snake.movingDirection[0]][
+        snake.body[snake.body.length - 1][1] + snake.movingDirection[1]
+      ].className === "apple"
+    ) {
+      appleEaten = true;
 
-    //Color the cell of the new head green while coloring the old tail not green
-    cellArr[snake.body[snake.body.length - 1][0]][
-      snake.body[snake.body.length - 1][1]
-    ].className = "snake";
-    cellArr[previousPosition[0]][previousPosition[1]].className = "td";
+      snake.body.unshift([snake.body[0][0], snake.body[0][1]]);
+
+      //Set the coordinates of the new head at the appropriate coordinate depending on the moving direction
+      snake.body[snake.body.length - 1][0] += snake.movingDirection[0];
+      snake.body[snake.body.length - 1][1] += snake.movingDirection[1];
+
+      //Color the cell of the new head green while coloring the old tail not green
+      cellArr[snake.body[snake.body.length - 1][0]][
+        snake.body[snake.body.length - 1][1]
+      ].className = "snake";
+      cellArr[previousPosition[0]][previousPosition[1]].className = "td";
+    } else {
+      //Set the coordinates of the new head at the appropriate coordinate depending on the moving direction
+      snake.body[snake.body.length - 1][0] += snake.movingDirection[0];
+      snake.body[snake.body.length - 1][1] += snake.movingDirection[1];
+
+      //Color the cell of the new head green while coloring the old tail not green
+      cellArr[snake.body[snake.body.length - 1][0]][
+        snake.body[snake.body.length - 1][1]
+      ].className = "snake";
+      cellArr[previousPosition[0]][previousPosition[1]].className = "td";
+    }
   } catch (error) {
     afterGameTitle.style.display = "block";
     clearInterval(secondIntervalID);
@@ -69,11 +100,14 @@ function spawnApple() {
   let x = Math.floor(Math.random() * cellArr[0].length);
   let y = Math.floor(Math.random() * cellArr.length);
   console.log(x, y);
-  if (cellArr[x][y].className != "snake") {
-    cellArr[x][y].className = "apple";
-  } else {
-    console.log("spawn apple recurse");
-    spawnApple();
+  try {
+    if (cellArr[y][x].className != "snake") {
+      cellArr[y][x].className = "apple";
+    } else {
+      spawnApple();
+    }
+  } catch (error) {
+    console.log(`ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR`);
   }
 }
 
@@ -81,6 +115,7 @@ function spawnApple() {
 makeTable();
 
 //Event Listeners
+//fun mode on or off
 powerButton.addEventListener(`click`, (evt) => {
   if (!gameState) {
     if (!powerUpState) {
@@ -93,48 +128,49 @@ powerButton.addEventListener(`click`, (evt) => {
   }
 });
 
-afterGameTitle.addEventListener(`click`, (evt) => {
-  window.location.reload();
+//reset game
+addEventListener(`keydown`, (evt) => {
+  if (afterGameTitle.style.display === "block" && evt.key === ` `) {
+    window.location.reload();
+  }
 });
 
+/*
+ **NEW DIRECTION FIXES IT! newDirection will save the last input given by the user before the renderSnake() method runs.
+ */
+//direction for snake
 addEventListener("keydown", (evt) => {
-  if (evt.key === "ArrowRight") {
+  if (evt.key === "ArrowRight" && snake.movingDirection[1] != -1) {
     if (!gameState) {
       clearInterval(firstIntervalID);
       gameState = true;
     }
     preGameTitle.style.display = `none`;
-    snake.movingDirection = [0, 1];
-  }
-  if (evt.key === "ArrowLeft") {
+    newDirection = [0, 1];
+  } else if (evt.key === "ArrowLeft" && snake.movingDirection[1] != 1) {
     if (!gameState) {
       clearInterval(firstIntervalID);
       gameState = true;
     }
-    clearInterval(firstIntervalID);
-    gameState = true;
+
     preGameTitle.style.display = `none`;
-    snake.movingDirection = [0, -1];
-  }
-  if (evt.key === "ArrowDown") {
+    newDirection = [0, -1];
+  } else if (evt.key === "ArrowDown" && snake.movingDirection[0] != -1) {
     if (!gameState) {
       clearInterval(firstIntervalID);
       gameState = true;
     }
-    clearInterval(firstIntervalID);
-    gameState = true;
+
     preGameTitle.style.display = `none`;
-    snake.movingDirection = [1, 0];
-  }
-  if (evt.key === "ArrowUp") {
+    newDirection = [1, 0];
+  } else if (evt.key === "ArrowUp" && snake.movingDirection[0] != 1) {
     if (!gameState) {
       clearInterval(firstIntervalID);
       gameState = true;
     }
-    clearInterval(firstIntervalID);
-    gameState = true;
+
     preGameTitle.style.display = `none`;
-    snake.movingDirection = [-1, 0];
+    newDirection = [-1, 0];
   }
 });
 
@@ -149,15 +185,13 @@ let firstIntervalID = setInterval(function () {
 
 //Actual Game Interval
 let secondIntervalID = setInterval(function () {
-  //LISTEN TO KEY DOWN PRESS
   if (gameState) {
     renderSnake();
     if (appleEaten) {
-      console.log(`REACHED`);
       spawnApple();
       appleEaten = false;
     }
   }
-}, 50);
+}, 100);
 
 // clearInterval(firstIntervalID);
