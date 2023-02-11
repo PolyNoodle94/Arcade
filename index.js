@@ -6,11 +6,16 @@ const powerButton = document.getElementById("power-up-button");
 const score = document.getElementById("score");
 
 //global variables
+//boolean
 let powerUpState = false;
 let gameState = false;
 let appleEaten = false;
+//integer
+let scoreNum = 0;
+//arrays
 let newDirection = [0, 0];
-powerButton.style.color = "red";
+let cellArr = [];
+//object
 let snake = {
   body: [
     [1, 1],
@@ -19,7 +24,6 @@ let snake = {
   ],
   movingDirection: [0, 0],
 };
-let cellArr = [];
 
 //functions
 function makeTable() {
@@ -33,17 +37,19 @@ function makeTable() {
     }
     table.appendChild(tr);
   }
+
+  //Setting up base game look
   cellArr[1][1].className = "snake";
   cellArr[2][1].className = "snake";
   cellArr[3][1].className = "snake";
 
   cellArr[10][1].className = "apple";
 
-  console.log(cellArr.length);
-  console.log(cellArr[0].length);
+  powerButton.style.color = "red";
 }
 
 function renderSnake() {
+  //try catch for if they hit the border!
   try {
     //Saves the location of the tail of the snake
 
@@ -78,6 +84,13 @@ function renderSnake() {
         snake.body[snake.body.length - 1][1]
       ].className = "snake";
       cellArr[previousPosition[0]][previousPosition[1]].className = "td";
+    } else if (
+      cellArr[snake.body[snake.body.length - 1][0] + snake.movingDirection[0]][
+        snake.body[snake.body.length - 1][1] + snake.movingDirection[1]
+      ].className === "snake"
+    ) {
+      afterGameTitle.style.display = "block";
+      clearInterval(secondIntervalID);
     } else {
       //Set the coordinates of the new head at the appropriate coordinate depending on the moving direction
       snake.body[snake.body.length - 1][0] += snake.movingDirection[0];
@@ -99,15 +112,11 @@ function spawnApple() {
   //Grabs one random coordinates on the game map
   let x = Math.floor(Math.random() * cellArr[0].length);
   let y = Math.floor(Math.random() * cellArr.length);
-  console.log(x, y);
-  try {
-    if (cellArr[y][x].className != "snake") {
-      cellArr[y][x].className = "apple";
-    } else {
-      spawnApple();
-    }
-  } catch (error) {
-    console.log(`ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR`);
+
+  if (cellArr[y][x].className != "snake") {
+    cellArr[y][x].className = "apple";
+  } else {
+    spawnApple();
   }
 }
 
@@ -188,6 +197,8 @@ let secondIntervalID = setInterval(function () {
   if (gameState) {
     renderSnake();
     if (appleEaten) {
+      scoreNum++;
+      score.innerHTML = `SCORE ${scoreNum}`;
       spawnApple();
       appleEaten = false;
     }
