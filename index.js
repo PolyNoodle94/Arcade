@@ -12,7 +12,7 @@ let funModeState = false;
 let gameState = false;
 let appleEaten = false;
 //integer
-let scoreNum = 0;
+let scoreNum = 3;
 //arrays
 let newDirection = [0, 0];
 let cellArr = [];
@@ -148,8 +148,36 @@ function spawnApple() {
   }
 }
 
-//function calling
-makeTable();
+//PreGame SetInterval: keeps blinking "Press arrow keys to start the game", and once gameStarts, clearInterval
+function beforeGame() {
+  let firstIntervalID = setInterval(function () {
+    if (gameState) {
+      clearInterval(firstIntervalID);
+    } else if (preGameTitle.style.display === "none") {
+      preGameTitle.style.display = `initial`;
+    } else {
+      preGameTitle.style.display = `none`;
+    }
+  }, 1000);
+}
+
+//Actual Game Interval
+
+function duringGame() {
+  let secondIntervalID = setInterval(function () {
+    if (gameState) {
+      renderSnake();
+      if (appleEaten) {
+        scoreNum++;
+        score.innerHTML = `LENGTH ${scoreNum}`;
+        spawnApple();
+        appleEaten = false;
+      }
+    } else if (!gameState) {
+      clearInterval(secondIntervalID);
+    }
+  }, 80);
+}
 
 //Event Listeners
 //fun mode on or off
@@ -179,7 +207,10 @@ addEventListener(`keydown`, (evt) => {
     }
 
     appleEaten = false;
+    scoreNum = 3;
+    score.innerHTML = `LENGTH ${scoreNum}`;
     newDirection = [0, 0];
+    snake.movingDirection = [0, 0];
     snake.body = [
       [1, 1],
       [2, 1],
@@ -218,11 +249,11 @@ addEventListener("keydown", (evt) => {
       preGameTitle.style.display = `none`;
       newDirection = [0, -1];
     } else if (evt.key === "ArrowDown" && snake.movingDirection[0] != -1) {
+      console.log(`HELLO!!!`);
       if (!gameState) {
         duringGame();
         gameState = true;
       }
-
       preGameTitle.style.display = `none`;
       newDirection = [1, 0];
     } else if (
@@ -241,38 +272,6 @@ addEventListener("keydown", (evt) => {
   }
 });
 
-//PreGame SetInterval: keeps blinking "Press arrow keys to start the game", and once gameStarts, clearInterval
-function beforeGame() {
-  let firstIntervalID = setInterval(function () {
-    if (gameState) {
-      clearInterval(firstIntervalID);
-    } else if (preGameTitle.style.display === "none") {
-      preGameTitle.style.display = `initial`;
-    } else {
-      preGameTitle.style.display = `none`;
-    }
-  }, 1000);
-}
-
-//Actual Game Interval
-
-function duringGame() {
-  let secondIntervalID = setInterval(function () {
-    if (gameState) {
-      renderSnake();
-      if (appleEaten) {
-        scoreNum++;
-        score.innerHTML = `SCORE ${scoreNum}`;
-        spawnApple();
-        appleEaten = false;
-      }
-    } else if (!gameState) {
-      clearInterval(secondIntervalID);
-    }
-  }, 100);
-}
-
-//game Logic
+//function calling
+makeTable();
 beforeGame();
-//user presses a button, duringGame() starts
-//game ends when
