@@ -83,7 +83,7 @@ section {
 
 #afterGameTitle {
   position: absolute;
-  display: none;
+  display: block;
   font-size: 0.65em;
   width: 30%;
   text-align: center;
