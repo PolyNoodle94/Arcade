@@ -92,7 +92,6 @@ function renderSnake() {
     ].className = "snake";
     cellArr[previousPosition[0]][previousPosition[1]].className = "td";
   } catch (error) {
-    //THIS IS ALL STRETCH GOALS!!!!! IF YOU CANT FIGURE IT OUT BEFORE HANGING OUT WITH SAM, SUBMIT BASE GAME!!!
     //if its collided with the wall, and funModeState is On
     if (funModeState) {
       //if its going right, teleport to left border
@@ -137,7 +136,6 @@ function renderSnake() {
 
 function spawnApple() {
   //Grabs one random coordinates on the game map
-  //the -1 and +1 are there so that the apple doesnt spawn adjacent to borders
   let x = Math.floor(Math.random() * cellArr[0].length);
   let y = Math.floor(Math.random() * cellArr.length);
 
@@ -162,7 +160,6 @@ function beforeGame() {
 }
 
 //Actual Game Interval
-
 function duringGame() {
   let secondIntervalID = setInterval(function () {
     if (gameState) {
@@ -196,7 +193,6 @@ funButton.addEventListener(`click`, (evt) => {
 //reset game
 addEventListener(`keydown`, (evt) => {
   if (afterGameTitle.style.display === "block" && evt.key === ` `) {
-    // window.location.reload();
     afterGameTitle.style.display = "none";
     preGameTitle.style.display = "initial";
 
@@ -227,9 +223,6 @@ addEventListener(`keydown`, (evt) => {
   }
 });
 
-/*
- **NEW DIRECTION FIXES IT! newDirection will save the last input given by the user before the renderSnake() method runs.
- */
 //direction for snake
 addEventListener("keydown", (evt) => {
   if (afterGameTitle.style.display === "none") {
