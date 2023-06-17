@@ -81,8 +81,11 @@ function renderSnake() {
       ].className === "snake"
     ) {
       afterGameTitle.style.display = "block";
-      fatherDisplay.style.display = "flex";
       gameState = false;
+      setTimeout(() => {
+        fatherDisplay.style.display = "flex";
+        playAudio();
+      }, 3000);
     }
 
     //Set the coordinates of the new head at the appropriate coordinate depending on the moving direction
@@ -124,8 +127,11 @@ function renderSnake() {
         ].className === "snake"
       ) {
         afterGameTitle.style.display = "block";
-        fatherDisplay.style.display = "flex";
         gameState = false;
+        setTimeout(() => {
+          fatherDisplay.style.display = "flex";
+          playAudio();
+        }, 3000);
       }
       cellArr[snake.body[snake.body.length - 1][0]][
         snake.body[snake.body.length - 1][1]
@@ -133,16 +139,22 @@ function renderSnake() {
       cellArr[previousPosition[0]][previousPosition[1]].className = "td";
     } else {
       afterGameTitle.style.display = "block";
-      fatherDisplay.style.display = "flex";
       gameState = false;
-      playAudio();
+
+      setTimeout(() => {
+        fatherDisplay.style.display = "flex";
+        playAudio();
+      }, 3000);
     }
   }
 }
 
 function playAudio() {
-  let audio = new Audio("different_now.mp3");
+  const jsConfetti = new JSConfetti();
+  let audio = new Audio("yay_confetti.mp3");
   audio.play();
+  jsConfetti.addConfetti();
+  jsConfetti.addConfetti();
 }
 
 function spawnApple() {
