@@ -5,6 +5,8 @@ const afterGameTitle = document.getElementById("afterGameTitle");
 const funButton = document.getElementById("fun-button");
 const score = document.getElementById("score");
 
+const fatherDisplay = document.getElementById("fatherDisplay");
+
 afterGameTitle.style.display = "none";
 //global variables
 //boolean
@@ -79,6 +81,7 @@ function renderSnake() {
       ].className === "snake"
     ) {
       afterGameTitle.style.display = "block";
+      fatherDisplay.style.display = "flex";
       gameState = false;
     }
 
@@ -121,6 +124,7 @@ function renderSnake() {
         ].className === "snake"
       ) {
         afterGameTitle.style.display = "block";
+        fatherDisplay.style.display = "flex";
         gameState = false;
       }
       cellArr[snake.body[snake.body.length - 1][0]][
@@ -129,6 +133,7 @@ function renderSnake() {
       cellArr[previousPosition[0]][previousPosition[1]].className = "td";
     } else {
       afterGameTitle.style.display = "block";
+      fatherDisplay.style.display = "flex";
       gameState = false;
     }
   }
@@ -222,6 +227,20 @@ addEventListener(`keydown`, (evt) => {
     beforeGame();
   }
 });
+
+window.addEventListener(
+  "keydown",
+  function (e) {
+    if (
+      ["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(
+        e.code
+      ) > -1
+    ) {
+      e.preventDefault();
+    }
+  },
+  false
+);
 
 //direction for snake
 addEventListener("keydown", (evt) => {

@@ -65,7 +65,7 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 5px solid goldenrod;
+  /* border: 5px solid goldenrod; */
 }
 
 #preGameTitle {
@@ -96,7 +96,7 @@ section {
 
 table {
   margin-top: 15px;
-  border: 4px solid white;
+  /* border: 4px solid white; */
 }
 
 td {
@@ -111,4 +111,52 @@ td {
 
 .apple {
   background-color: red;
+}
+
+.paragraphBlock {
+  display: flex;
+  padding: 5px;
+  background-color: whitesmoke;
+}
+
+.fatherDiv {
+  /* display: flex; */
+  display: none;
+  position: absolute;
+
+  gap: 10px;
+
+  border: 10px solid transparent;
+  background-image: linear-gradient(0deg, #ff0, #f0f);
+  /* border-image-slice: 1; */
+
+  height: fit-content;
+
+  animation: fade-in 5s;
+
+  min-height: 95%;
+  min-width: 95%;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0%;
+  }
+
+  100% {
+    opactiy: 100%;
+  }
+}
+
+.father {
+  /* display: flex;
+  position: absolute;
+
+  justify-content: center;
+  align-items: center;
+
+  border: 10px solid goldenrod; */
+
+  max-width: 560px;
+  max-height: 1012px;
 }
