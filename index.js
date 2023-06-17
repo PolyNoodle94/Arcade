@@ -6,6 +6,9 @@ const funButton = document.getElementById("fun-button");
 const score = document.getElementById("score");
 
 const fatherDisplay = document.getElementById("fatherDisplay");
+const gameAudio = new Audio("tetris_music.mp3");
+const gameDeathSFX = new Audio("death_sfx.mp3");
+let isGameMusicPlaying = false;
 
 afterGameTitle.style.display = "none";
 //global variables
@@ -82,6 +85,12 @@ function renderSnake() {
     ) {
       afterGameTitle.style.display = "block";
       gameState = false;
+
+      gameDeathSFX.play();
+
+      isGameMusicPlaying = false;
+      playGameMusic();
+
       setTimeout(() => {
         fatherDisplay.style.display = "flex";
         playAudio();
@@ -128,6 +137,12 @@ function renderSnake() {
       ) {
         afterGameTitle.style.display = "block";
         gameState = false;
+
+        gameDeathSFX.play();
+
+        isGameMusicPlaying = false;
+        playGameMusic();
+
         setTimeout(() => {
           fatherDisplay.style.display = "flex";
           playAudio();
@@ -141,11 +156,24 @@ function renderSnake() {
       afterGameTitle.style.display = "block";
       gameState = false;
 
+      isGameMusicPlaying = false;
+      playGameMusic();
+
+      gameDeathSFX.play();
+
       setTimeout(() => {
         fatherDisplay.style.display = "flex";
         playAudio();
       }, 3000);
     }
+  }
+}
+
+function playGameMusic() {
+  if (!gameState) {
+    gameAudio.pause();
+  } else if (gameState && !isGameMusicPlaying) {
+    gameAudio.play();
   }
 }
 
@@ -184,7 +212,13 @@ function beforeGame() {
 
 //Actual Game Interval
 function duringGame() {
+  console.log("gameState: ", gameState);
+
   let secondIntervalID = setInterval(function () {
+    if (gameState) {
+      playGameMusic();
+    }
+    isGameMusicPlaying = true;
     if (gameState) {
       renderSnake();
       if (appleEaten) {
