@@ -135,8 +135,14 @@ function renderSnake() {
       afterGameTitle.style.display = "block";
       fatherDisplay.style.display = "flex";
       gameState = false;
+      playAudio();
     }
   }
+}
+
+function playAudio() {
+  let audio = new Audio("different_now.mp3");
+  audio.play();
 }
 
 function spawnApple() {
@@ -195,38 +201,38 @@ funButton.addEventListener(`click`, (evt) => {
   }
 });
 
-//reset game
-addEventListener(`keydown`, (evt) => {
-  if (afterGameTitle.style.display === "block" && evt.key === ` `) {
-    afterGameTitle.style.display = "none";
-    preGameTitle.style.display = "initial";
+//reset game || commented out for fathers day edition since the game is only meant to be played once
+// addEventListener(`keydown`, (evt) => {
+//   if (afterGameTitle.style.display === "block" && evt.key === ` `) {
+//     afterGameTitle.style.display = "none";
+//     preGameTitle.style.display = "initial";
 
-    for (let i = 0; i < cellArr.length; i++) {
-      for (let j = 0; j < cellArr[i].length; j++) {
-        cellArr[i][j].className = "td";
-      }
-    }
+//     for (let i = 0; i < cellArr.length; i++) {
+//       for (let j = 0; j < cellArr[i].length; j++) {
+//         cellArr[i][j].className = "td";
+//       }
+//     }
 
-    appleEaten = false;
-    scoreNum = 3;
-    score.innerHTML = `LENGTH ${scoreNum}`;
-    newDirection = [0, 0];
-    snake.movingDirection = [0, 0];
-    snake.body = [
-      [1, 1],
-      [2, 1],
-      [3, 1],
-    ];
+//     appleEaten = false;
+//     scoreNum = 3;
+//     score.innerHTML = `LENGTH ${scoreNum}`;
+//     newDirection = [0, 0];
+//     snake.movingDirection = [0, 0];
+//     snake.body = [
+//       [1, 1],
+//       [2, 1],
+//       [3, 1],
+//     ];
 
-    cellArr[1][1].className = "snake";
-    cellArr[2][1].className = "snake";
-    cellArr[3][1].className = "snake";
+//     cellArr[1][1].className = "snake";
+//     cellArr[2][1].className = "snake";
+//     cellArr[3][1].className = "snake";
 
-    cellArr[10][1].className = "apple";
+//     cellArr[10][1].className = "apple";
 
-    beforeGame();
-  }
-});
+//     beforeGame();
+//   }
+// });
 
 window.addEventListener(
   "keydown",
