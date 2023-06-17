@@ -1,0 +1,21 @@
+{
+  "name": "arcade",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PolyNoodle94/Arcade.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PolyNoodle94/Arcade/issues"
+  },
+  "homepage": "https://github.com/PolyNoodle94/Arcade#readme",
+  "dependencies": {}
+}
